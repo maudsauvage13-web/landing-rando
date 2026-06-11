@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Névé — Randonnées 100% sans voiture au départ de Paris",
-  description: "Partez à l'aventure sans stress. Névé planifie votre randonnée en fonction des trains de banlieue depuis Paris (Fontainebleau, Vallée de la Chevreuse), entièrement accessible avec votre pass Navigo.",
+  title: "Névé — Randonnée sans voiture depuis Paris | Planifie et réserve en 2 min",
+  description: "Planifie ta randonnée et achète ton billet de train en moins de 2 minutes. Sentiers accessibles en TER, RER et Transilien au départ de Paris — Fontainebleau, Chevreuse, Rambouillet. 100% sans voiture.",
 };
 
 export default function RootLayout({
@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="fr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >

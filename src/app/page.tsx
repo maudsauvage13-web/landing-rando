@@ -281,30 +281,36 @@ interface HeroRouteStep {
 }
 
 interface HeroRoute {
-  name: string;
+  regionName: string;
   tag: string;
-  rating: string;
-  trainTime: string;
-  distance: string;
   stationStart: string;
   stationEnd: string;
   lineName: string;
   lineColor: string;
   glowColor: string;
   trainCoordinates: [number, number][];
-  hikeCoordinates: [number, number][];
   mapCenter: [number, number];
   mapZoom: number;
-  steps: HeroRouteStep[];
-}
-
-const HERO_ROUTES: Record<"fontainebleau" | "chevreuse", HeroRoute> = {
+  hikes: {
+    name: string;
+    rating: string;
+    distance: string;
+    trainTime: string;
+    img: string;
+    hikeCoordinates: [number, number][];
+    steps: HeroRouteStep[];
+    difficulty?: "Facile" | "Modéré" | "Difficile";
+    elevation?: string;
+    temp?: string;
+    location?: string;
+    duration?: string;
+    co2?: string;
+    tag?: string;
+  }[];
+}const HERO_ROUTES: Record<"fontainebleau" | "chevreuse", HeroRoute> = {
   fontainebleau: {
-    name: "Forêt de Fontainebleau",
+    regionName: "Forêt de Fontainebleau",
     tag: "Massifs & Forêts",
-    rating: "4.9",
-    trainTime: "38 min",
-    distance: "14.2 km",
     stationStart: "Paris Gare de Lyon",
     stationEnd: "Fontainebleau-Avon",
     lineName: "Transilien Ligne R",
@@ -318,51 +324,152 @@ const HERO_ROUTES: Record<"fontainebleau" | "chevreuse", HeroRoute> = {
       [2.6601, 48.5332], // Melun
       [2.7246, 48.4215]  // Fontainebleau-Avon
     ],
-    hikeCoordinates: [
-      [2.7246, 48.4215], // Avon Station
-      [2.7050, 48.4180],
-      [2.6850, 48.4250],
-      [2.6650, 48.4280],
-      [2.6510, 48.4190],
-      [2.6700, 48.4080],
-      [2.6950, 48.4110],
-      [2.7246, 48.4215]
-    ],
     mapCenter: [2.54, 48.64],
     mapZoom: 9.8,
-    steps: [
+    hikes: [
       {
-        type: "walk",
-        desc: "Rendez-vous à Paris Gare de Lyon",
-        duration: "5 min",
-        detail: "Accès facile en Métro (Lignes 1, 14) et RER (A, D)."
+        name: "Les Gorges de l'Apremont",
+        rating: "4.9",
+        distance: "14.2 km",
+        trainTime: "38 min",
+        img: "/journey_mountain.png",
+        difficulty: "Modéré",
+        elevation: "+180m",
+        temp: "19°C",
+        location: "Avon, Seine-et-Marne",
+        hikeCoordinates: [
+          [2.7246, 48.4215], // Avon Station
+          [2.7050, 48.4180],
+          [2.6850, 48.4250],
+          [2.6650, 48.4280],
+          [2.6510, 48.4190],
+          [2.6700, 48.4080],
+          [2.6950, 48.4110],
+          [2.7246, 48.4215]
+        ],
+        steps: [
+          {
+            type: "walk",
+            desc: "Rendez-vous à Paris Gare de Lyon",
+            duration: "5 min",
+            detail: "Accès facile en Métro (Lignes 1, 14) et RER (A, D)."
+          },
+          {
+            type: "train",
+            desc: "Prendre le Transilien Ligne R direct",
+            duration: "38 min (Gare de Lyon ➡️ Fontainebleau-Avon)",
+            detail: "Prochain départ dans 12 min (Voie N). Entièrement inclus dans le pass Navigo. Trains toutes les 30 min."
+          },
+          {
+            type: "hike",
+            desc: "Randonnée : Les Gorges de l'Apremont",
+            duration: "14.2 km loop (~3h45) - Balisage Bleu",
+            detail: "Départ immédiat depuis le quai. Traversée de platières rocheuses, de chaos de grès et de pinèdes sablonneuses."
+          },
+          {
+            type: "return",
+            desc: "Retour garanti pour le dîner",
+            duration: "Ligne R vers Paris toutes les 30 min",
+            detail: "Dernier train à 22:45. Pas de retard ni de stress logistique."
+          }
+        ]
       },
       {
-        type: "train",
-        desc: "Prendre le Transilien Ligne R direct",
-        duration: "38 min (Gare de Lyon ➡️ Fontainebleau-Avon)",
-        detail: "Prochain départ dans 12 min (Voie N). Entièrement inclus dans le pass Navigo. Trains toutes les 30 min."
+        name: "Les Gorges de Franchard",
+        rating: "4.8",
+        distance: "8.5 km",
+        trainTime: "38 min",
+        img: "/tent_forest.png",
+        difficulty: "Facile",
+        elevation: "+95m",
+        temp: "19°C",
+        location: "Avon, Seine-et-Marne",
+        hikeCoordinates: [
+          [2.7246, 48.4215], // Avon Station
+          [2.7100, 48.4100],
+          [2.6900, 48.4000],
+          [2.6500, 48.3950],
+          [2.6450, 48.4050],
+          [2.6700, 48.4150],
+          [2.7246, 48.4215]
+        ],
+        steps: [
+          {
+            type: "walk",
+            desc: "Rendez-vous à Paris Gare de Lyon",
+            duration: "5 min",
+            detail: "Accès facile en Métro (Lignes 1, 14) et RER (A, D)."
+          },
+          {
+            type: "train",
+            desc: "Prendre le Transilien Ligne R direct",
+            duration: "38 min (Gare de Lyon ➡️ Fontainebleau-Avon)",
+            detail: "Prochain départ dans 12 min (Voie N). Entièrement inclus dans le pass Navigo."
+          },
+          {
+            type: "hike",
+            desc: "Randonnée : Les Gorges de Franchard",
+            duration: "8.5 km loop (~2h30) - Balisage Jaune",
+            detail: "Une boucle plus courte mais intense à travers les chaos rocheux célèbres de Franchard."
+          },
+          {
+            type: "return",
+            desc: "Retour garanti pour le dîner",
+            duration: "Ligne R vers Paris toutes les 30 min",
+            detail: "Dernier train à 22:45. Pas de retard ni de stress logistique."
+          }
+        ]
       },
       {
-        type: "hike",
-        desc: "Randonnée : Les Gorges de l'Apremont",
-        duration: "14.2 km loop (~3h45) - Balisage Bleu",
-        detail: "Départ immédiat depuis le quai. Traversée de platières rocheuses, de chaos de grès et de pinèdes sablonneuses."
-      },
-      {
-        type: "return",
-        desc: "Retour garanti pour le dîner",
-        duration: "Ligne R vers Paris toutes les 30 min",
-        detail: "Dernier train à 22:45. Pas de retard ni de stress logistique."
+        name: "Le Sentier des Belvédères",
+        rating: "4.7",
+        distance: "11.0 km",
+        trainTime: "38 min",
+        img: "/forest_green.png",
+        difficulty: "Modéré",
+        elevation: "+140m",
+        temp: "19°C",
+        location: "Avon, Seine-et-Marne",
+        hikeCoordinates: [
+          [2.7246, 48.4215], // Avon Station
+          [2.7300, 48.4350],
+          [2.7150, 48.4450],
+          [2.6900, 48.4500],
+          [2.6800, 48.4350],
+          [2.7246, 48.4215]
+        ],
+        steps: [
+          {
+            type: "walk",
+            desc: "Rendez-vous à Paris Gare de Lyon",
+            duration: "5 min",
+            detail: "Accès facile en Métro (Lignes 1, 14) et RER (A, D)."
+          },
+          {
+            type: "train",
+            desc: "Prendre le Transilien Ligne R direct",
+            duration: "38 min (Gare de Lyon ➡️ Fontainebleau-Avon)",
+            detail: "Prochain départ dans 12 min (Voie N). Entièrement inclus dans le pass Navigo."
+          },
+          {
+            type: "hike",
+            desc: "Randonnée : Le Sentier des Belvédères",
+            duration: "11.0 km loop (~3h00) - Balisage Bleu",
+            detail: "Itinéraire panoramique offrant des points de vue spectaculaires sur la cime des arbres."
+          },
+          {
+            type: "return",
+            desc: "Retour garanti pour le dîner",
+            duration: "Ligne R vers Paris toutes les 30 min",
+            detail: "Dernier train à 22:45. Pas de retard ni de stress logistique."
+          }
+        ]
       }
     ]
   },
   chevreuse: {
-    name: "Vallée de la Chevreuse",
+    regionName: "Vallée de la Chevreuse",
     tag: "Falaises & Vallées",
-    rating: "4.8",
-    trainTime: "45 min",
-    distance: "15.8 km",
     stationStart: "Paris Châtelet les Halles",
     stationEnd: "Saint-Rémy-lès-Chevreuse",
     lineName: "RER B",
@@ -375,41 +482,144 @@ const HERO_ROUTES: Record<"fontainebleau" | "chevreuse", HeroRoute> = {
       [2.1648, 48.7180],
       [2.0624, 48.7061]  // Saint-Rémy-lès-Chevreuse
     ],
-    hikeCoordinates: [
-      [2.0624, 48.7061], // Saint-Rémy
-      [2.0463, 48.7095], // Château de la Madeleine
-      [2.0310, 48.7010],
-      [2.0390, 48.6880],
-      [2.0550, 48.6820],
-      [2.0650, 48.6960],
-      [2.0624, 48.7061]
-    ],
     mapCenter: [2.20, 48.78],
     mapZoom: 10.3,
-    steps: [
+    hikes: [
       {
-        type: "walk",
-        desc: "Rendez-vous à Paris Châtelet les Halles",
-        duration: "Direct",
-        detail: "Accès direct via lignes de métro 1, 4, 7, 11, 14 et RER A, D."
+        name: "Sentier des Maréchaux & Châteaux",
+        rating: "4.8",
+        distance: "15.8 km",
+        trainTime: "45 min",
+        img: "/journey_river.png",
+        difficulty: "Modéré",
+        elevation: "+210m",
+        temp: "18°C",
+        location: "Saint-Rémy, Yvelines",
+        hikeCoordinates: [
+          [2.0624, 48.7061], // Saint-Rémy
+          [2.0463, 48.7095], // Château de la Madeleine
+          [2.0310, 48.7010],
+          [2.0390, 48.6880],
+          [2.0550, 48.6820],
+          [2.0650, 48.6960],
+          [2.0624, 48.7061]
+        ],
+        steps: [
+          {
+            type: "walk",
+            desc: "Rendez-vous à Paris Châtelet les Halles",
+            duration: "Direct",
+            detail: "Accès direct via lignes de métro 1, 4, 7, 11, 14 et RER A, D."
+          },
+          {
+            type: "train",
+            desc: "Prendre le RER B Sud",
+            duration: "45 min (Châtelet ➡️ Saint-Rémy-lès-Chevreuse)",
+            detail: "Prendre les trains terminus Saint-Rémy (B4). Fréquence : toutes les 15 min. Compris dans le pass Navigo."
+          },
+          {
+            type: "hike",
+            desc: "Randonnée : Sentier des Maréchaux & Châteaux",
+            duration: "15.8 km loop (~4h15) - Balisage Rouge/Jaune",
+            detail: "Connexion directe gare. Longe le canal de l'Yvette, traverse la forêt et grimpe jusqu'au Château de la Madeleine."
+          },
+          {
+            type: "return",
+            desc: "Retour simple & régulier",
+            duration: "RER B vers Paris toutes les 15 min",
+            detail: "Terminus direct à sens inverse. Trains réguliers jusqu'à 0h30 pour un retour en toute sérénité."
+          }
+        ]
       },
       {
-        type: "train",
-        desc: "Prendre le RER B Sud",
-        duration: "45 min (Châtelet ➡️ Saint-Rémy-lès-Chevreuse)",
-        detail: "Prendre les trains terminus Saint-Rémy (B4). Fréquence : toutes les 15 min. Compris dans le pass Navigo."
+        name: "Les Cascades de Cernay",
+        rating: "4.9",
+        distance: "12.3 km",
+        trainTime: "45 min",
+        img: "/forest_lake.png",
+        difficulty: "Facile",
+        elevation: "+80m",
+        temp: "18°C",
+        location: "Saint-Rémy, Yvelines",
+        hikeCoordinates: [
+          [2.0624, 48.7061], // Saint-Rémy
+          [2.0500, 48.6900],
+          [2.0100, 48.6800],
+          [1.9800, 48.6750],
+          [2.0000, 48.6950],
+          [2.0624, 48.7061]
+        ],
+        steps: [
+          {
+            type: "walk",
+            desc: "Rendez-vous à Paris Châtelet les Halles",
+            duration: "Direct",
+            detail: "Accès direct via lignes de métro 1, 4, 7, 11, 14 et RER A, D."
+          },
+          {
+            type: "train",
+            desc: "Prendre le RER B Sud",
+            duration: "45 min (Châtelet ➡️ Saint-Rémy-lès-Chevreuse)",
+            detail: "Prendre les trains terminus Saint-Rémy (B4). Fréquence : toutes les 15 min. Compris dans le pass Navigo."
+          },
+          {
+            type: "hike",
+            desc: "Randonnée : Les Cascades de Cernay",
+            duration: "12.3 km loop (~3h30) - Balisage Rouge",
+            detail: "Explorez les gorges et les chutes d'eau pittoresques des Vaux de Cernay."
+          },
+          {
+            type: "return",
+            desc: "Retour simple & régulier",
+            duration: "RER B vers Paris toutes les 15 min",
+            detail: "Terminus direct à sens inverse. Trains réguliers jusqu'à 0h30."
+          }
+        ]
       },
       {
-        type: "hike",
-        desc: "Randonnée : Sentier des Maréchaux & Châteaux",
-        duration: "15.8 km loop (~4h15) - Balisage Rouge/Jaune",
-        detail: "Connexion directe gare. Longe le canal de l'Yvette, traverse la forêt et grimpe jusqu'au Château de la Madeleine."
-      },
-      {
-        type: "return",
-        desc: "Retour simple & régulier",
-        duration: "RER B vers Paris toutes les 15 min",
-        detail: "Terminus direct à sens inverse. Trains réguliers jusqu'à 0h30 pour un retour en toute sérénité."
+        name: "Le Viaduc des Fauvettes",
+        rating: "4.6",
+        distance: "9.5 km",
+        trainTime: "40 min",
+        img: "/neve_hero_bg.png",
+        difficulty: "Modéré",
+        elevation: "+110m",
+        temp: "18°C",
+        location: "Bures-sur-Yvette, Essonne",
+        hikeCoordinates: [
+          [2.0624, 48.7061], // Saint-Rémy
+          [2.0800, 48.7100],
+          [2.1100, 48.7050],
+          [2.1300, 48.6970],
+          [2.1000, 48.6900],
+          [2.0624, 48.7061]
+        ],
+        steps: [
+          {
+            type: "walk",
+            desc: "Rendez-vous à Paris Châtelet les Halles",
+            duration: "Direct",
+            detail: "Accès direct via lignes de métro 1, 4, 7, 11, 14 et RER A, D."
+          },
+          {
+            type: "train",
+            desc: "Prendre le RER B Sud",
+            duration: "40 min (Châtelet ➡️ Bures-sur-Yvette)",
+            detail: "Descendre un peu avant Saint-Rémy pour un accès direct au viaduc."
+          },
+          {
+            type: "hike",
+            desc: "Randonnée : Le Viaduc des Fauvettes",
+            duration: "9.5 km loop (~2h15) - Balisage Jaune",
+            detail: "Traversez le viaduc ferroviaire désaffecté offrant une vue impressionnante à 30m de haut."
+          },
+          {
+            type: "return",
+            desc: "Retour simple & régulier",
+            duration: "RER B vers Paris toutes les 15 min",
+            detail: "Terminus direct à sens inverse. Trains réguliers jusqu'à 0h30."
+          }
+        ]
       }
     ]
   }
@@ -493,19 +703,106 @@ export default function Home() {
   // Concept modal state
   const [conceptModalOpen, setConceptModalOpen] = useState(false);
 
+  // Book on Trainline Modal state
+  const [bookModalOpen, setBookModalOpen] = useState(false);
+  const [bookRegistered, setBookRegistered] = useState(false);
+  const [bookForm, setBookForm] = useState({ name: "", email: "", password: "", terms: false });
+  const [bookErrors, setBookErrors] = useState<{ name?: string; email?: string; password?: string; terms?: string }>({});
+  const [bookDownloadMsg, setBookDownloadMsg] = useState<string | null>(null);
+
+  const handleBookInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setBookForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+    if (bookErrors[name as keyof typeof bookErrors]) {
+      setBookErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const handleBookSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newErrors: typeof bookErrors = {};
+
+    if (!bookForm.name.trim()) {
+      newErrors.name = "Le nom complet est requis.";
+    }
+    if (!bookForm.email.trim()) {
+      newErrors.email = "L'adresse e-mail est requise.";
+    } else if (!/\S+@\S+\.\S+/.test(bookForm.email)) {
+      newErrors.email = "L'adresse e-mail n'est pas valide.";
+    }
+    if (!bookForm.password) {
+      newErrors.password = "Le mot de passe est requis.";
+    } else if (bookForm.password.length < 8) {
+      newErrors.password = "Le mot de passe doit contenir au moins 8 caractères.";
+    }
+    if (!bookForm.terms) {
+      newErrors.terms = "Vous devez accepter les conditions d'utilisation.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setBookErrors(newErrors);
+      return;
+    }
+
+    setBookRegistered(true);
+  };
+
+
   // Interactive Hero States
   const [heroState, setHeroState] = useState<'search' | 'loading' | 'map'>('search');
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDest, setSelectedDest] = useState<'fontainebleau' | 'chevreuse'>('fontainebleau');
+  const [selectedHikeIdx, setSelectedHikeIdx] = useState(0);
   const [loadingStep, setLoadingStep] = useState(0);
   const [openFaqIdx, setOpenFaqIdx] = useState<number | null>(0);
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+
+  const toggleFavorite = (name: string) => {
+    setFavorites(prev => ({ ...prev, [name]: !prev[name] }));
+  };
+
+  const handleHikeScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const scrollTop = e.currentTarget.scrollTop;
+    const cardHeight = 438; // card height 420px + gap 18px
+    if (cardHeight > 0) {
+      const newIdx = Math.round(scrollTop / cardHeight);
+      if (newIdx >= 0 && newIdx < HERO_ROUTES[selectedDest].hikes.length && newIdx !== selectedHikeIdx) {
+        setSelectedHikeIdx(newIdx);
+      }
+    }
+  };
+
+  const selectHikeFromDot = (idx: number) => {
+    setSelectedHikeIdx(idx);
+    if (scrollContainerRef.current) {
+      const cardHeight = 438;
+      scrollContainerRef.current.scrollTop = idx * cardHeight;
+    }
+  };
+
+  // Sync scroll top on index update (e.g. from reset)
+  useEffect(() => {
+    if (scrollContainerRef.current && heroState === 'map') {
+      const container = scrollContainerRef.current;
+      const cardHeight = 438;
+      const expectedScrollTop = selectedHikeIdx * cardHeight;
+      if (Math.abs(container.scrollTop - expectedScrollTop) > 20) {
+        container.scrollTop = expectedScrollTop;
+      }
+    }
+  }, [selectedHikeIdx, heroState]);
+
   const handleSearchSubmit = (destKey?: 'fontainebleau' | 'chevreuse') => {
     let targetDest: 'fontainebleau' | 'chevreuse' = 'fontainebleau';
-    
+
     if (destKey) {
       targetDest = destKey;
     } else {
@@ -516,8 +813,9 @@ export default function Home() {
         targetDest = 'fontainebleau'; // Default
       }
     }
-    
+
     setSelectedDest(targetDest);
+    setSelectedHikeIdx(0);
     setHeroState('loading');
     setLoadingStep(0);
   };
@@ -552,6 +850,7 @@ export default function Home() {
     if (!mapContainerRef.current) return;
 
     const route = HERO_ROUTES[selectedDest];
+    const hike = route.hikes[selectedHikeIdx];
 
     // Dynamic import to avoid SSR errors
     import("maplibre-gl").then((maplibregl) => {
@@ -606,7 +905,7 @@ export default function Home() {
             properties: {},
             geometry: {
               type: "LineString",
-              coordinates: route.hikeCoordinates
+              coordinates: hike.hikeCoordinates
             }
           }
         });
@@ -620,7 +919,7 @@ export default function Home() {
             "line-cap": "round"
           },
           paint: {
-            "line-color": "#f59e0b", // Orange for hiking
+            "line-color": "#719A48", // Primary green for hiking
             "line-width": 3.5,
             "line-dasharray": [2, 2],
             "line-opacity": 0.9
@@ -631,17 +930,17 @@ export default function Home() {
         const elStart = document.createElement("div");
         elStart.className = "w-4 h-4 rounded-full bg-white border-2 border-neutral-900 shadow-md flex items-center justify-center cursor-pointer";
         elStart.innerHTML = `<div class="w-1.5 h-1.5 rounded-full bg-neutral-950"></div>`;
-        
+
         new maplibregl.Marker({ element: elStart })
           .setLngLat(route.trainCoordinates[0])
           .addTo(map);
 
-        // Add Terminus Station Marker (Amber marker with pulsing indicator)
+        // Add Terminus Station Marker (Primary green marker with pulsing indicator)
         const elEnd = document.createElement("div");
         elEnd.className = "relative flex items-center justify-center cursor-pointer";
         elEnd.innerHTML = `
-          <div class="absolute w-8 h-8 rounded-full bg-amber-500/30 animate-ping"></div>
-          <div class="relative w-4 h-4 rounded-full bg-amber-500 border-2 border-white shadow-md"></div>
+          <div class="absolute w-8 h-8 rounded-full bg-primary-500/30 animate-ping"></div>
+          <div class="relative w-4 h-4 rounded-full bg-primary-500 border-2 border-white shadow-md"></div>
         `;
 
         new maplibregl.Marker({ element: elEnd })
@@ -656,7 +955,7 @@ export default function Home() {
         mapRef.current = null;
       }
     };
-  }, [heroState, selectedDest]);
+  }, [heroState, selectedDest, selectedHikeIdx]);
 
 
 
@@ -698,7 +997,7 @@ export default function Home() {
                 <CustomMountainLogo className="w-7 h-7 text-neutral-900 group-hover:scale-105 transition-transform duration-200" />
                 <span className="font-black text-xl tracking-widest text-neutral-900 uppercase">Névé</span>
               </button>
- 
+
               {/* Desktop Menu */}
               <nav className="hidden md:flex items-center gap-6">
                 <button
@@ -726,17 +1025,17 @@ export default function Home() {
                   Communauté
                 </button>
               </nav>
- 
+
               {/* Right CTA */}
               <div className="hidden md:flex items-center gap-4">
                 <button
-                  onClick={() => scrollToId("footer-cta")}
+                  onClick={() => window.location.href = "/signup"}
                   className="px-5 py-2 bg-neutral-950 hover:bg-neutral-800 text-white text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-300 shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2"
                 >
-                  Lancer l'app
+                  Créer un compte
                 </button>
               </div>
- 
+
               {/* Mobile Menu Trigger */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -747,7 +1046,7 @@ export default function Home() {
                 {mobileMenuOpen ? <XIcon className="w-5 h-5" /> : <MenuIcon className="w-5 h-5" />}
               </button>
             </div>
- 
+
             {/* Mobile Menu Panel */}
             {mobileMenuOpen && (
               <div className="pointer-events-auto md:hidden absolute top-20 left-6 right-6 bg-white/95 backdrop-blur-xl border border-neutral-200/60 px-6 py-8 flex flex-col gap-6 animate-fade-in shadow-2xl rounded-[24px] text-neutral-900">
@@ -777,10 +1076,10 @@ export default function Home() {
                 </button>
                 <hr className="border-neutral-200/60" />
                 <button
-                  onClick={() => scrollToId("footer-cta")}
+                  onClick={() => window.location.href = "/signup"}
                   className="w-full text-center py-4 bg-primary-900 hover:bg-primary-950 text-white text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2"
                 >
-                  Lancer l'app
+                  Créer un compte
                 </button>
               </div>
             )}
@@ -789,14 +1088,15 @@ export default function Home() {
       </div>
 
       {/* 2. HERO SECTION */}
-      <section id="hero" className={`relative overflow-hidden transition-all duration-1000 ${heroState === 'map' ? 'bg-primary-50 h-screen' : 'bg-neutral-50 min-h-screen'} flex items-center -mt-20 ${heroState === 'map' ? 'pt-20 pb-0' : 'pt-48 pb-24 md:pt-56 md:pb-32'}`}>
+      <section id="hero" className={`transition-all duration-1000 ${heroState === 'map' ? 'fixed inset-0 z-30 bg-primary-50 overflow-hidden' : 'relative overflow-hidden bg-neutral-50 min-h-screen flex items-center -mt-20 pt-48 pb-24 md:pt-56 md:pb-32'}`}>
         {/* Background image covering full height (Only visible in search & loading states, hidden in map state) */}
         <div className={`absolute inset-0 z-0 transition-all duration-1000 ${heroState === 'map' ? 'opacity-0 pointer-events-none scale-105 blur-sm' : 'opacity-100 scale-100'}`}>
-          <Image 
-            src="/neve_footer_bg.jpg" 
-            alt="Randonneur au sommet d'une falaise admirant la vallée de montagne" 
-            fill 
+          <Image
+            src="/neve_footer_bg.jpeg"
+            alt="Randonneur au sommet d'une falaise admirant la vallée de montagne"
+            fill
             priority
+            quality={95}
             className="object-cover object-center"
             sizes="100vw"
           />
@@ -811,172 +1111,14 @@ export default function Home() {
           </div>
         )}
 
-        <div className="max-w-7xl mx-auto px-6 w-full relative z-10 flex flex-col items-center">
-          
-          {heroState === 'search' || heroState === 'loading' ? (
-            <>
-              {/* Heading */}
-              <h1 
-                className="text-[32px] sm:text-[48px] md:text-[52px] font-black text-white uppercase tracking-tight leading-[36px] sm:leading-[52px] md:leading-[52px] text-center"
-                style={{ textShadow: '0 2px 14px rgba(0, 0, 0, 0.75), 0 1px 3px rgba(0, 0, 0, 0.9)' }}
-              >
-                Quittez Paris sur un coup de tête. <br />
-                <span className="text-white block my-2 bg-primary-700 max-w-fit mx-auto py-2 px-4 rounded-lg shadow-md" style={{ textShadow: 'none' }}>Rentrez pour le dîner.</span>
-                <span>Sans stress.</span>
-              </h1>
+        {/* Floating Details panel directly in hero (relative to full-screen) */}
+        {heroState === 'map' && (
+          <div className="absolute inset-0 z-20 pointer-events-none flex items-center">
+            <div className="max-w-7xl mx-auto px-6 w-full pointer-events-none flex items-center justify-start">
+              <div className="pointer-events-auto w-full max-w-[390px] bg-white/70 backdrop-blur-md border border-white/40 rounded-[32px] p-4 shadow-2xl flex flex-col gap-4 text-neutral-900 animate-scale-up">
 
-              {heroState === 'search' ? (
-                // Centered White Frosted Glass Search Card
-                <div className="relative w-full max-w-[680px] mx-auto bg-white/60 backdrop-blur-md border border-white/40 shadow-xl rounded-[32px] p-6 text-neutral-900 text-left mt-10 animate-scale-up">
-                  {/* Search Bar Input (White pill with green button) */}
-                  <form 
-                    onSubmit={(e) => { e.preventDefault(); handleSearchSubmit(); }}
-                    className="relative flex items-center bg-white border border-neutral-200/60 rounded-full px-5 py-3.5 shadow-sm focus-within:ring-2 focus-within:ring-primary-700 focus-within:border-transparent transition-all"
-                  >
-                    <svg className="w-4.5 h-4.5 text-neutral-400 mr-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    <input 
-                      type="text" 
-                      placeholder="Où voulez-vous randonner ?" 
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="text-sm text-neutral-800 placeholder-neutral-600 font-medium flex-1 bg-transparent border-none outline-none focus:ring-0 p-0"
-                      aria-label="Rechercher une destination de randonnée"
-                    />
-                    <button 
-                      type="submit"
-                      className="w-8 h-8 rounded-full bg-primary-600 hover:bg-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2 flex items-center justify-center text-white font-bold text-sm cursor-pointer transition-colors shadow-sm ml-2"
-                      aria-label="Lancer la recherche"
-                    >
-                      <ArrowRightIcon className="w-4 h-4" />
-                    </button>
-                  </form>
-
-                  {/* Suggestions Header */}
-                  <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-neutral-600 mt-6 mb-3 px-1">
-                    <span>Recherches fréquentes</span>
-                    <button 
-                      type="button"
-                      onClick={() => handleSearchSubmit()}
-                      className="text-primary-700 hover:underline cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 rounded px-1.5 py-0.5 text-xs font-bold"
-                    >
-                      Voir tout
-                    </button>
-                  </div>
-
-                  {/* Suggestions List */}
-                  <div className="space-y-3">
-                    {/* Fontainebleau */}
-                    <button 
-                      type="button"
-                      onClick={() => handleSearchSubmit('fontainebleau')}
-                      className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white border border-neutral-100/80 hover:border-primary-500/30 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 transition-all duration-300 cursor-pointer shadow-sm active:scale-[0.995]"
-                    >
-                      <div className="flex items-center min-w-0">
-                        <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 border border-neutral-200/50">
-                          <Image src="/journey_mountain.png" alt="Forêt de Fontainebleau" fill className="object-cover" />
-                        </div>
-                        <div className="ml-4 text-left">
-                          <h4 className="text-sm font-bold text-neutral-900">Forêt de Fontainebleau</h4>
-                          <p className="text-xs text-neutral-600 mt-0.5">38 min de train • 14.2 km</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm font-black text-primary-700 flex items-center gap-0.5 justify-end">
-                          <span className="text-amber-600">★</span>
-                          <span>4.9</span>
-                        </div>
-                      </div>
-                    </button>
-
-                    {/* Chevreuse */}
-                    <button 
-                      type="button"
-                      onClick={() => handleSearchSubmit('chevreuse')}
-                      className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white border border-neutral-100/80 hover:border-primary-500/30 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 transition-all duration-300 cursor-pointer shadow-sm active:scale-[0.995]"
-                    >
-                      <div className="flex items-center min-w-0">
-                        <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 border border-neutral-200/50">
-                          <Image src="/journey_river.png" alt="Vallée de la Chevreuse" fill className="object-cover" />
-                        </div>
-                        <div className="ml-4 text-left">
-                          <h4 className="text-sm font-bold text-neutral-900">Vallée de la Chevreuse</h4>
-                          <p className="text-xs text-neutral-600 mt-0.5">45 min de RER • 15.8 km</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm font-black text-primary-700 flex items-center gap-0.5 justify-end">
-                          <span className="text-amber-600">★</span>
-                          <span>4.8</span>
-                        </div>
-                      </div>
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                // Centered Light Frosted Glass Loading Card
-                <div className="relative w-full max-w-[680px] mx-auto bg-white/60 backdrop-blur-md border border-white/40 shadow-xl rounded-[32px] p-6 text-neutral-900 text-center mt-10 items-center justify-center py-16 animate-scale-up">
-                  <div className="w-12 h-12 rounded-full border-4 border-neutral-200 border-t-primary-700 animate-spin mx-auto"></div>
-                  <div className="text-center space-y-3 mt-6">
-                    <p className="text-xs font-bold uppercase tracking-widest text-primary-700">Recherche d'itinéraire...</p>
-                    <p className="text-sm font-semibold text-neutral-800 transition-all duration-300">
-                      {loadingStep === 0 && "Calcul de l'itinéraire optimal sans voiture..."}
-                      {loadingStep === 1 && "Vérification des prochains départs SNCF..."}
-                      {loadingStep === 2 && "Génération de la trace de randonnée..."}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* Subheadline (Centered, white for visibility) */}
-              <p 
-                className="text-white text-sm sm:text-base text-center font-normal tracking-wide max-w-2xl mx-auto mt-10 leading-relaxed"
-                style={{ textShadow: '0 1px 8px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.9)' }}
-              >
-                Névé planifie votre rando en fonction du prochain train. <br />
-                Zéro voiture, zéro calcul, 100% d'évasion en direct sur votre écran.
-              </p>
-
-              {/* Social Proof (Centered, white for visibility) */}
-              <div className="pt-8 mt-6 border-t border-white/10 flex flex-col sm:flex-row items-center gap-4 justify-center w-full max-w-md mx-auto">
-                <div className="flex -space-x-3">
-                  <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white">
-                    <Image src="/journey_mountain.png" alt="Utilisateur Névé" fill className="object-cover" />
-                  </div>
-                  <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white">
-                    <Image src="/journey_river.png" alt="Utilisateur Névé" fill className="object-cover" />
-                  </div>
-                  <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white">
-                    <Image src="/tent_forest.png" alt="Utilisateur Névé" fill className="object-cover" />
-                  </div>
-                  <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white">
-                    <Image src="/forest_green.png" alt="Utilisateur Névé" fill className="object-cover" />
-                  </div>
-                  <div className="w-8 h-8 rounded-full bg-white/20 border-2 border-white flex items-center justify-center text-[9px] font-bold text-white">
-                    +
-                  </div>
-                </div>
-                <div 
-                  className="text-center sm:text-left text-white"
-                  style={{ textShadow: '0 1px 4px rgba(0, 0, 0, 0.8)' }}
-                >
-                  <p className="text-xs font-semibold tracking-wide">
-                    Déjà +500 samedis sauvés de la routine parisienne.
-                  </p>
-                  <p className="text-xs text-neutral-100 mt-0.5 font-normal">
-                    Aucun retard de train manqué grâce aux alertes en direct.
-                  </p>
-                </div>
-              </div>
-            </>
-          ) : (
-            // Full-bleed map state: Floating Liquid Glass details panel on the left (hiding central slogan)
-            <div className="absolute left-4 right-4 bottom-4 lg:left-12 lg:top-12 lg:bottom-12 lg:right-auto z-20 w-auto lg:w-[380px] flex flex-col justify-center animate-scale-up">
-              <div className="relative w-full bg-white/60 backdrop-blur-md border border-white/40 rounded-[32px] p-6 shadow-2xl flex flex-col gap-5 text-neutral-900">
-                
                 {/* Close / Back button */}
-                <button 
+                <button
                   onClick={() => setHeroState('search')}
                   className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-neutral-600 hover:text-neutral-950 transition-colors cursor-pointer w-fit focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2 rounded px-1.5 py-0.5"
                 >
@@ -987,88 +1129,321 @@ export default function Home() {
                 {/* Header info */}
                 <div className="flex justify-between items-start">
                   <div>
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-primary-700/10 text-primary-700 border border-primary-700/20 mb-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary-700 animate-pulse"></span>
-                      <span>Trajet optimal trouvé</span>
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase bg-primary-700/10 text-primary-700 border border-primary-700/20 mb-1">
+                      <span className="w-1 h-1 rounded-full bg-primary-700 animate-pulse"></span>
+                      <span>{HERO_ROUTES[selectedDest].tag}</span>
                     </span>
-                    <h2 className="text-xl font-black uppercase tracking-tight text-neutral-900 leading-tight">
-                      {HERO_ROUTES[selectedDest].name}
+                    <h2 className="text-base font-black uppercase tracking-tight text-neutral-900 leading-tight">
+                      {HERO_ROUTES[selectedDest].regionName}
                     </h2>
                   </div>
-                  <div className="text-right">
-                    <div className="text-xs font-bold text-amber-800 flex items-center gap-0.5 justify-end">
-                      <span className="text-amber-600">★</span>
-                      <span>{HERO_ROUTES[selectedDest].rating}</span>
-                    </div>
-                    <span className="text-xs text-neutral-600 block mt-0.5">Note Rando</span>
-                  </div>
+                  <span className="text-[9px] font-bold text-neutral-500 uppercase tracking-widest pt-1 shrink-0">
+                    SIMULATEUR
+                  </span>
                 </div>
 
-                {/* Journey Metrics */}
-                <div className="grid grid-cols-3 gap-2 py-3 border-y border-neutral-200/80 text-center">
-                  <div>
-                    <p className="text-[11px] uppercase font-bold text-neutral-600 tracking-wider">Transport</p>
-                    <p className="text-xs font-bold text-neutral-900 mt-0.5">{HERO_ROUTES[selectedDest].trainTime}</p>
-                  </div>
-                  <div>
-                    <p className="text-[11px] uppercase font-bold text-neutral-600 tracking-wider">Randonnée</p>
-                    <p className="text-xs font-bold text-neutral-900 mt-0.5">{HERO_ROUTES[selectedDest].distance}</p>
-                  </div>
-                  <div>
-                    <p className="text-[11px] uppercase font-bold text-primary-700 mt-0.5">Tarif</p>
-                    <p className="text-xs font-bold text-primary-700 mt-0.5">Navigo</p>
-                  </div>
-                </div>
+                {/* Vertical Scrollable Hikes Track */}
+                <div className="relative w-full mt-1.5 flex flex-col gap-3">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-neutral-500 block px-0.5 text-left">
+                    Itinéraires disponibles ({HERO_ROUTES[selectedDest].hikes.length})
+                  </span>
 
-                {/* Itinerary Timeline */}
-                <div className="space-y-4 my-2 max-h-[280px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-neutral-300">
-                  {HERO_ROUTES[selectedDest].steps.map((step, idx) => (
-                    <div key={idx} className="flex gap-3 text-left">
-                      {/* Timeline Connector Line and Bullet */}
-                      <div className="flex flex-col items-center">
-                        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                          step.type === 'walk' ? 'bg-neutral-100 text-neutral-500 border border-neutral-200' :
-                          step.type === 'train' ? 'bg-emerald-50 text-primary-700 border border-emerald-100' :
-                          step.type === 'hike' ? 'bg-amber-50 text-amber-700 border border-amber-100' :
-                          'bg-primary-50 text-primary-700 border border-primary-100'
-                        }`}>
-                          {step.type === 'walk' && "🚶"}
-                          {step.type === 'train' && "🚇"}
-                          {step.type === 'hike' && "🥾"}
-                          {step.type === 'return' && "🔄"}
+                  {/* Vertical Scroll Track */}
+                  <div 
+                    ref={scrollContainerRef}
+                    onScroll={handleHikeScroll}
+                    className="flex flex-col overflow-y-auto scroll-smooth w-full h-[500px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] gap-4.5"
+                  >
+                    {HERO_ROUTES[selectedDest].hikes.map((hike, idx) => {
+                      const isFav = !!favorites[hike.name];
+                      const isSelected = selectedHikeIdx === idx;
+                      return (
+                        <div 
+                          key={hike.name}
+                          onClick={() => setSelectedHikeIdx(idx)}
+                          className={`w-full shrink-0 bg-white rounded-3xl p-3.5 shadow-md border transition-all duration-300 flex flex-col gap-4 cursor-pointer ${
+                            isSelected 
+                              ? "border-primary-500 ring-2 ring-primary-500/30 shadow-lg shadow-primary-500/10" 
+                              : "border-neutral-200/40 hover:border-neutral-300 hover:shadow-lg"
+                          }`}
+                        >
+                          {/* Image Container with overlays */}
+                          <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-neutral-100 border border-neutral-200/20">
+                            <Image
+                              src={hike.img}
+                              alt={hike.name}
+                              fill
+                              className="object-cover"
+                              sizes="320px"
+                            />
+
+                            {/* Weather Overlay Tag (Top-left) */}
+                            {hike.temp && (
+                              <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[10px] font-black text-neutral-800 flex items-center gap-1 shadow-sm">
+                                <span>☀️</span>
+                                <span>{hike.temp}</span>
+                              </div>
+                            )}
+                            
+                            {/* Heart Icon Button (Top-right) */}
+                            <button
+                              onClick={(e) => { e.stopPropagation(); toggleFavorite(hike.name); }}
+                              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white shadow-md border border-neutral-200/30 flex items-center justify-center text-neutral-800 hover:scale-105 active:scale-95 transition-all cursor-pointer focus:outline-none"
+                              aria-label={isFav ? "Retirer des favoris" : "Ajouter aux favoris"}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill={isFav ? "var(--color-primary-500)" : "none"}
+                                stroke={isFav ? "var(--color-primary-500)" : "currentColor"}
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="w-4 h-4 transition-colors"
+                              >
+                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                              </svg>
+                            </button>
+
+                            {/* Badges Bottom Row overlay */}
+                            <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5">
+                              <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider text-white ${
+                                hike.difficulty === 'Facile' ? 'bg-primary-500' :
+                                hike.difficulty === 'Modéré' ? 'bg-primary-700' :
+                                'bg-red-600'
+                              }`}>
+                                {hike.difficulty}
+                              </span>
+                              {hike.elevation && (
+                                <span className="bg-neutral-950/60 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold">
+                                  ↗ {hike.elevation}
+                                </span>
+                              )}
+                              <span className="bg-blue-600/70 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold flex items-center gap-1">
+                                <span>🚆</span>
+                                <span>{hike.trainTime} (TER)</span>
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Hike Text Details */}
+                          <div className="flex flex-col text-left">
+                            <div className="flex items-start justify-between gap-2">
+                              <h3 className="text-sm font-black text-neutral-950 uppercase tracking-tight leading-tight hover:underline cursor-pointer">
+                                {hike.name}
+                              </h3>
+                              <div className="flex items-center gap-0.5 text-neutral-900 text-xs font-black shrink-0">
+                                <span>★</span>
+                                <span>{hike.rating}</span>
+                              </div>
+                            </div>
+                            <p className="text-[10px] text-neutral-500 font-bold mt-0.5">
+                              Départ : Paris {HERO_ROUTES[selectedDest].stationStart.replace("Paris ", "")} • {hike.location ? hike.location.split(",")[0] : HERO_ROUTES[selectedDest].stationEnd}
+                            </p>
+                            
+                            {/* Rating and metrics row */}
+                            <div className="flex items-center flex-wrap gap-1.5 text-[10px] text-neutral-400 font-bold mt-2">
+                              <span className={hike.difficulty === "Facile" ? "text-primary-500" : hike.difficulty === "Modéré" ? "text-primary-700" : "text-red-600"}>
+                                {hike.difficulty}
+                              </span>
+                              <span>•</span>
+                              <span>{hike.distance}</span>
+                              <span>•</span>
+                              <span>{hike.duration || "3h00"}</span>
+                              <span>•</span>
+                              <span className="text-emerald-600 font-extrabold">🌿 {hike.co2 || "-10kg"}</span>
+                            </div>
+                          </div>
+
+                          {/* Accès Train Container (Light beige/cream box) */}
+                          <div className="bg-primary-50 border border-primary-100 rounded-2xl p-2.5 flex flex-col gap-0.5 text-left">
+                            <span className="text-[9px] font-black tracking-wider text-primary-600 flex items-center gap-1 leading-none">
+                              ACCÈS TRAIN/TER
+                            </span>
+                            <p className="text-[10px] text-neutral-800 font-bold leading-snug">
+                              Paris {HERO_ROUTES[selectedDest].stationStart.replace("Paris ", "")} ➡️ {hike.location ? hike.location.split(",")[0] : HERO_ROUTES[selectedDest].stationEnd} ({HERO_ROUTES[selectedDest].lineName}, {hike.trainTime})
+                            </p>
+                          </div>
+
+                          {/* Individual Signup CTA Button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.location.href = "/signup";
+                            }}
+                            className="w-full py-2.5 bg-primary-600 hover:bg-primary-700 text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all duration-300 shadow-md text-center cursor-pointer focus:outline-none"
+                          >
+                            Créer mon compte — C'est gratuit
+                          </button>
                         </div>
-                        {idx < HERO_ROUTES[selectedDest].steps.length - 1 && (
-                          <div className="w-0.5 h-10 bg-neutral-200 my-1"></div>
-                        )}
-                      </div>
-                      {/* Step content */}
-                      <div className="flex-1 min-w-0 pt-0.5">
-                        <div className="flex justify-between items-start gap-1">
-                          <h4 className="text-xs font-bold text-neutral-900 leading-snug">{step.desc}</h4>
-                          <span className="text-[10px] font-bold text-neutral-700 flex-shrink-0 bg-neutral-200/60 px-1.5 py-0.5 rounded">
-                            {step.duration}
-                          </span>
-                        </div>
-                        {step.detail && (
-                          <p className="text-xs text-neutral-600 mt-1 leading-relaxed font-normal">{step.detail}</p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                      );
+                    })}
+                  </div>
                 </div>
-
-                {/* Importer CTA */}
-                <button 
-                  onClick={() => scrollToId("footer-cta")}
-                  className="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-300 shadow-lg shadow-primary-950/30 text-center cursor-pointer mt-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2"
-                >
-                  Importer la trace GPX
-                </button>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-        </div>
+        {/* Centered Search / Loading State Main Content */}
+        {(heroState === 'search' || heroState === 'loading') && (
+          <div className="max-w-7xl mx-auto px-6 w-full relative z-10 flex flex-col items-center">
+            {/* Heading */}
+            <h1
+              className="text-[32px] sm:text-[48px] md:text-[52px] font-black text-white uppercase tracking-tight leading-[36px] sm:leading-[52px] md:leading-[52px] text-center"
+              style={{ textShadow: '0 2px 14px rgba(0, 0, 0, 0.75), 0 1px 3px rgba(0, 0, 0, 0.9)' }}
+            >
+              <span className="block text-base sm:text-lg md:text-xl font-bold normal-case tracking-normal opacity-90 mb-3" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.6)' }}>Marre de passer plus de temps à planifier qu'à marcher ?</span>
+              Planifie ta rando et achète ton billet<br />
+              <span className="text-white block my-2 bg-primary-700 max-w-fit mx-auto py-2 px-4 rounded-lg shadow-md" style={{ textShadow: 'none' }}>en moins de 2 minutes chrono.</span>
+            </h1>
+
+            {heroState === 'search' ? (
+              // Centered White Frosted Glass Search Card
+              <div className="relative w-full max-w-[680px] mx-auto bg-white/60 backdrop-blur-md border border-white/40 shadow-xl rounded-[32px] p-6 text-neutral-900 text-left mt-10 animate-scale-up">
+                {/* Search Bar Input (White pill with green button) */}
+                <form
+                  onSubmit={(e) => { e.preventDefault(); handleSearchSubmit(); }}
+                  className="relative flex items-center bg-white border border-neutral-200/60 rounded-full px-5 py-3.5 shadow-sm focus-within:ring-2 focus-within:ring-primary-700 focus-within:border-transparent transition-all"
+                >
+                  <svg className="w-4.5 h-4.5 text-neutral-400 mr-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="Fontainebleau, Chevreuse, Rambouillet…"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="text-sm text-neutral-800 placeholder-neutral-600 font-medium flex-1 bg-transparent border-none outline-none focus:ring-0 p-0"
+                    aria-label="Rechercher une destination de randonnée"
+                  />
+                  <button
+                    type="submit"
+                    className="w-8 h-8 rounded-full bg-primary-600 hover:bg-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2 flex items-center justify-center text-white font-bold text-sm cursor-pointer transition-colors shadow-sm ml-2"
+                    aria-label="Lancer la recherche"
+                  >
+                    <ArrowRightIcon className="w-4 h-4" />
+                  </button>
+                </form>
+
+                {/* Suggestions Header */}
+                <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-neutral-600 mt-6 mb-3 px-1">
+                  <span>Recherches fréquentes</span>
+                  <button
+                    type="button"
+                    onClick={() => handleSearchSubmit()}
+                    className="text-primary-700 hover:underline cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 rounded px-1.5 py-0.5 text-xs font-bold"
+                  >
+                    Voir tout
+                  </button>
+                </div>
+
+                {/* Suggestions List */}
+                <div className="space-y-3">
+                  {/* Fontainebleau */}
+                  <button
+                    type="button"
+                    onClick={() => handleSearchSubmit('fontainebleau')}
+                    className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white border border-neutral-100/80 hover:border-primary-500/30 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 transition-all duration-300 cursor-pointer shadow-sm active:scale-[0.995]"
+                  >
+                    <div className="flex items-center min-w-0">
+                      <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 border border-neutral-200/50">
+                        <Image src="/journey_mountain.png" alt="Forêt de Fontainebleau" fill className="object-cover" />
+                      </div>
+                      <div className="ml-4 text-left">
+                        <h4 className="text-sm font-bold text-neutral-900">Forêt de Fontainebleau</h4>
+                        <p className="text-xs text-neutral-600 mt-0.5">38 min de train • 14.2 km</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-black text-primary-700 flex items-center gap-0.5 justify-end">
+                        <span className="text-primary-600">★</span>
+                        <span>4.9</span>
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Chevreuse */}
+                  <button
+                    type="button"
+                    onClick={() => handleSearchSubmit('chevreuse')}
+                    className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white border border-neutral-100/80 hover:border-primary-500/30 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 transition-all duration-300 cursor-pointer shadow-sm active:scale-[0.995]"
+                  >
+                    <div className="flex items-center min-w-0">
+                      <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 border border-neutral-200/50">
+                        <Image src="/journey_river.png" alt="Vallée de la Chevreuse" fill className="object-cover" />
+                      </div>
+                      <div className="ml-4 text-left">
+                        <h4 className="text-sm font-bold text-neutral-900">Vallée de la Chevreuse</h4>
+                        <p className="text-xs text-neutral-600 mt-0.5">45 min de RER • 15.8 km</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-black text-primary-700 flex items-center gap-0.5 justify-end">
+                        <span className="text-primary-600">★</span>
+                        <span>4.8</span>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              // Centered Light Frosted Glass Loading Card
+              <div className="relative w-full max-w-[680px] mx-auto bg-white/60 backdrop-blur-md border border-white/40 shadow-xl rounded-[32px] p-6 text-neutral-900 text-center mt-10 items-center justify-center py-16 animate-scale-up">
+                <div className="w-12 h-12 rounded-full border-4 border-neutral-200 border-t-primary-700 animate-spin mx-auto"></div>
+                <div className="text-center space-y-3 mt-6">
+                  <p className="text-xs font-bold uppercase tracking-widest text-primary-700">Recherche d'itinéraire...</p>
+                  <p className="text-sm font-semibold text-neutral-800 transition-all duration-300">
+                    {loadingStep === 0 && "Calcul de l'itinéraire optimal sans voiture..."}
+                    {loadingStep === 1 && "Vérification des prochains départs SNCF..."}
+                    {loadingStep === 2 && "Génération de la trace de randonnée..."}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Subheadline (Centered, white for visibility) */}
+            <p
+              className="text-white text-sm sm:text-base text-center font-normal tracking-wide max-w-2xl mx-auto mt-10 leading-relaxed"
+              style={{ textShadow: '0 1px 8px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.9)' }}
+            >
+              Névé croise les horaires SNCF, la météo et les sentiers balisés pour te proposer la rando parfaite. <br />
+              Zéro voiture, zéro prise de tête.
+            </p>
+
+            {/* Social Proof (Centered, white for visibility) */}
+            <div className="pt-8 mt-6 border-t border-white/10 flex flex-col sm:flex-row items-center gap-4 justify-center w-full max-w-md mx-auto">
+              <div className="flex -space-x-3">
+                <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white">
+                  <Image src="/journey_mountain.png" alt="Utilisateur Névé" fill className="object-cover" />
+                </div>
+                <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white">
+                  <Image src="/journey_river.png" alt="Utilisateur Névé" fill className="object-cover" />
+                </div>
+                <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white">
+                  <Image src="/tent_forest.png" alt="Utilisateur Névé" fill className="object-cover" />
+                </div>
+                <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white">
+                  <Image src="/forest_green.png" alt="Utilisateur Névé" fill className="object-cover" />
+                </div>
+                <div className="w-8 h-8 rounded-full bg-white/20 border-2 border-white flex items-center justify-center text-[9px] font-bold text-white">
+                  +
+                </div>
+              </div>
+              <div
+                className="text-center sm:text-left text-white"
+                style={{ textShadow: '0 1px 4px rgba(0, 0, 0, 0.8)' }}
+              >
+                <p className="text-xs font-semibold tracking-wide">
+                  +500 randonneurs ont déjà lâché la voiture.
+                </p>
+                <p className="text-xs text-neutral-100 mt-0.5 font-normal">
+                  98% des trains de retour attrapés à l'heure.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* [NEW SECTION] 2.1 FRESH JOURNEYS CENTERED GRID SECTION (Inspired by Hidden Gems) */}
@@ -1080,31 +1455,31 @@ export default function Home() {
               Inspirez-vous
             </span>
             <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-neutral-900 leading-tight">
-              Explorez les pépites cachées d'Île-de-France
+              Des sentiers incroyables à moins d'1h de Paris
             </h2>
-            <button 
-              onClick={() => scrollToId("hero")}
+            <button
+              onClick={() => window.location.href = "/signup"}
               className="inline-flex items-center justify-center bg-primary-900 hover:bg-primary-950 text-white text-xs font-bold uppercase tracking-widest px-8 py-3 rounded-full transition-all duration-300 mt-4 shadow-sm cursor-pointer"
             >
-              Explorez les tracés
+              Créer mon compte gratuit
             </button>
           </div>
 
           {/* Cards Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            
+
             {/* Card 1: Mountain Escapes */}
             <div className="relative aspect-[3/4] rounded-3xl overflow-hidden group shadow-md hover:shadow-xl transition-shadow duration-300">
-              <Image 
-                src="/journey_mountain.png" 
-                alt="Forêts et rochers de Fontainebleau" 
-                fill 
+              <Image
+                src="/journey_mountain.png"
+                alt="Forêts et rochers de Fontainebleau"
+                fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 sizes="(max-w-7xl) 280px"
               />
               {/* Bottom dark gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent"></div>
-              
+
               {/* Card content at the bottom */}
               <div className="absolute bottom-0 inset-x-0 p-6 text-white space-y-3">
                 <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white">
@@ -1121,15 +1496,15 @@ export default function Home() {
 
             {/* Card 2: Valleys & Rivers */}
             <div className="relative aspect-[3/4] rounded-3xl overflow-hidden group shadow-md hover:shadow-xl transition-shadow duration-300">
-              <Image 
-                src="/journey_river.png" 
-                alt="Vallée de la Chevreuse" 
-                fill 
+              <Image
+                src="/journey_river.png"
+                alt="Vallée de la Chevreuse"
+                fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 sizes="(max-w-7xl) 280px"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent"></div>
-              
+
               <div className="absolute bottom-0 inset-x-0 p-6 text-white space-y-3">
                 <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.8" stroke="currentColor" className="w-5 h-5">
@@ -1145,15 +1520,15 @@ export default function Home() {
 
             {/* Card 3: Cliffs & Peaks */}
             <div className="relative aspect-[3/4] rounded-3xl overflow-hidden group shadow-md hover:shadow-xl transition-shadow duration-300">
-              <Image 
-                src="/forest_lake.png" 
-                alt="Crêtes et panoramas sauvages" 
-                fill 
+              <Image
+                src="/forest_lake.png"
+                alt="Crêtes et panoramas sauvages"
+                fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 sizes="(max-w-7xl) 280px"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent"></div>
-              
+
               <div className="absolute bottom-0 inset-x-0 p-6 text-white space-y-3">
                 <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.8" stroke="currentColor" className="w-5 h-5">
@@ -1170,15 +1545,15 @@ export default function Home() {
 
             {/* Card 4: Seasonal / Bivouac */}
             <div className="relative aspect-[3/4] rounded-3xl overflow-hidden group shadow-md hover:shadow-xl transition-shadow duration-300">
-              <Image 
-                src="/tent_forest.png" 
-                alt="Saisons et bivouacs" 
-                fill 
+              <Image
+                src="/tent_forest.png"
+                alt="Saisons et bivouacs"
+                fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 sizes="(max-w-7xl) 280px"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent"></div>
-              
+
               <div className="absolute bottom-0 inset-x-0 p-6 text-white space-y-3">
                 <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.8" stroke="currentColor" className="w-5 h-5">
@@ -1190,6 +1565,181 @@ export default function Home() {
                   Profitez des couleurs changeantes de l'automne ou de la brume matinale sur les étangs.
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2.2 THE NÉVÉ REVOLUTION (Old vs New Way) */}
+      <section id="revolution" className="py-24 bg-white border-b border-neutral-200 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Header */}
+          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <span className="text-xs font-black uppercase tracking-widest text-primary-700">
+              Pourquoi Névé
+            </span>
+            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-neutral-900 leading-tight">
+              Ce qui change avec Névé
+            </h2>
+            <p className="text-neutral-600 text-sm md:text-base font-normal max-w-2xl mx-auto leading-relaxed">
+              Plus besoin de jongler entre 5 onglets pour croiser horaires, météo et sentiers. Névé fait tout ça en 2 minutes.
+            </p>
+          </div>
+
+          {/* Advantages Grid - 3 cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            {/* Card 1: Accès sentier de la gare */}
+            <div className="bg-neutral-50 border border-neutral-200/80 rounded-[32px] p-8 md:p-10 shadow-sm relative overflow-hidden flex flex-col justify-between group hover:border-primary-200 hover:shadow-md transition-all duration-300">
+              <div className="space-y-6">
+                <div className="w-12 h-12 rounded-2xl bg-primary-50 border border-primary-200/50 flex items-center justify-center text-primary-700 text-2xl shadow-sm">
+                  🚉
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-lg font-black uppercase tracking-tight text-neutral-900 leading-tight">
+                    Du quai au sentier
+                  </h3>
+                  <p className="text-xs text-neutral-600 leading-relaxed font-normal">
+                    Chaque rando commence et finit au pied d'une gare. Tu descends du train, tu marches. Pas de navette, pas de covoiturage à organiser.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-8 pt-4 border-t border-neutral-200/50 text-[10px] font-black uppercase tracking-wider text-primary-700">
+                0 km en voiture
+              </div>
+            </div>
+
+            {/* Card 2: La sécurité du retour */}
+            <div className="bg-primary-950 text-white border border-primary-900 rounded-[32px] p-8 md:p-10 shadow-xl relative overflow-hidden flex flex-col justify-between group hover:scale-[1.02] transition-all duration-300">
+              {/* Premium Glow Accent */}
+              <div className="absolute -right-20 -top-20 w-48 h-48 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+              <div className="space-y-6 relative z-10">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-2xl shadow-sm">
+                  ⏱️
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-lg font-black uppercase tracking-tight text-white leading-tight">
+                    Retour garanti
+                  </h3>
+                  <p className="text-xs text-neutral-300 leading-relaxed font-normal">
+                    L'appli calcule ton allure et t'alerte quand il faut faire demi-tour. Tu ne rates jamais le train du retour.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-8 pt-4 border-t border-primary-900 text-[10px] font-black uppercase tracking-wider text-emerald-400 relative z-10">
+                Alertes en temps réel
+              </div>
+            </div>
+
+            {/* Card 3: Tracés GPX validés */}
+            <div className="bg-neutral-50 border border-neutral-200/80 rounded-[32px] p-8 md:p-10 shadow-sm relative overflow-hidden flex flex-col justify-between group hover:border-primary-200 hover:shadow-md transition-all duration-300">
+              <div className="space-y-6">
+                <div className="w-12 h-12 rounded-2xl bg-primary-50 border border-primary-200/50 flex items-center justify-center text-primary-700 text-2xl shadow-sm">
+                  🗺️
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-lg font-black uppercase tracking-tight text-neutral-900 leading-tight">
+                    Tracés vérifiés sur le terrain
+                  </h3>
+                  <p className="text-xs text-neutral-600 leading-relaxed font-normal">
+                    Chaque sentier est arpenté et validé par nos éclaireurs. Pas de GPX périmé ou de chemin barré : tu suis, tu marches, c'est fiable.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-8 pt-4 border-t border-neutral-200/50 text-[10px] font-black uppercase tracking-wider text-primary-700">
+                GPX testés sur le terrain
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 2.3 THE USER JOURNEY (Step by Step) */}
+      <section id="journey" className="py-24 bg-neutral-50 border-b border-neutral-200">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Header */}
+          <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
+            <span className="text-xs font-black uppercase tracking-widest text-primary-700">
+              Comment ça marche
+            </span>
+            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-neutral-900 leading-tight">
+              Du canapé au sommet en 4 étapes
+            </h2>
+            <p className="text-neutral-600 text-sm md:text-base font-normal max-w-2xl mx-auto leading-relaxed">
+              Tout se fait depuis ton téléphone. Tu choisis, tu réserves, tu marches, tu rentres.
+            </p>
+          </div>
+
+          {/* Steps Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+
+            {/* Connecting line for desktop (hidden on mobile) */}
+            <div className="hidden md:block absolute top-[52px] left-[12.5%] right-[12.5%] h-0.5 bg-neutral-200 z-0"></div>
+
+            {/* Step 1 */}
+            <div className="relative z-10 flex flex-col items-center text-center group">
+              <div className="w-24 h-24 rounded-full bg-white border-4 border-neutral-100 flex items-center justify-center shadow-lg group-hover:scale-105 group-hover:border-primary-100 transition-all duration-300 relative">
+                <span className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-primary-700 text-white text-xs font-black flex items-center justify-center">
+                  1
+                </span>
+                <span className="text-3xl">🔍</span>
+              </div>
+              <h3 className="text-base font-black uppercase tracking-tight text-neutral-900 mt-6 mb-2">
+                Choisis
+              </h3>
+              <p className="text-xs text-neutral-600 leading-relaxed font-normal max-w-[220px]">
+                Tape ta destination ou laisse Névé te suggérer la meilleure rando du jour selon la météo et les trains.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="relative z-10 flex flex-col items-center text-center group">
+              <div className="w-24 h-24 rounded-full bg-white border-4 border-neutral-100 flex items-center justify-center shadow-lg group-hover:scale-105 group-hover:border-primary-100 transition-all duration-300 relative">
+                <span className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-primary-700 text-white text-xs font-black flex items-center justify-center">
+                  2
+                </span>
+                <span className="text-3xl">🎫</span>
+              </div>
+              <h3 className="text-base font-black uppercase tracking-tight text-neutral-900 mt-6 mb-2">
+                Réserve
+              </h3>
+              <p className="text-xs text-neutral-600 leading-relaxed font-normal max-w-[220px]">
+                Ton billet de train s'achète en 2 clics, directement dans l'appli. Navigo ou billet classique.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="relative z-10 flex flex-col items-center text-center group">
+              <div className="w-24 h-24 rounded-full bg-white border-4 border-neutral-100 flex items-center justify-center shadow-lg group-hover:scale-105 group-hover:border-primary-100 transition-all duration-300 relative">
+                <span className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-primary-700 text-white text-xs font-black flex items-center justify-center">
+                  3
+                </span>
+                <span className="text-3xl">🥾</span>
+              </div>
+              <h3 className="text-base font-black uppercase tracking-tight text-neutral-900 mt-6 mb-2">
+                Marche
+              </h3>
+              <p className="text-xs text-neutral-600 leading-relaxed font-normal max-w-[220px]">
+                Suis le tracé GPX sur ton écran, même sans réseau. L'appli te guide du quai au sentier.
+              </p>
+            </div>
+
+            {/* Step 4 */}
+            <div className="relative z-10 flex flex-col items-center text-center group">
+              <div className="w-24 h-24 rounded-full bg-white border-4 border-neutral-100 flex items-center justify-center shadow-lg group-hover:scale-105 group-hover:border-primary-100 transition-all duration-300 relative">
+                <span className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-primary-700 text-white text-xs font-black flex items-center justify-center">
+                  4
+                </span>
+                <span className="text-3xl">🍽️</span>
+              </div>
+              <h3 className="text-base font-black uppercase tracking-tight text-neutral-900 mt-6 mb-2">
+                Rentre
+              </h3>
+              <p className="text-xs text-neutral-600 leading-relaxed font-normal max-w-[220px]">
+                L'alerte retour se déclenche au bon moment. Tu reprends ton train, tu es chez toi pour le dîner.
+              </p>
             </div>
 
           </div>
@@ -1204,23 +1754,23 @@ export default function Home() {
               SÉCURITÉ & FIABILITÉ
             </span>
             <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-neutral-900 mt-3">
-              Votre confort et votre sécurité sont notre priorité.
+              Randonner sans stress, c'est possible.
             </h2>
             <p className="text-neutral-600 mt-4 text-sm md:text-base">
-              Randonnez en toute décontraction. Nos guides et algorithmes veillent sur chaque étape pour éliminer tous les risques de logistique.
+              Sentiers vérifiés, alertes en temps réel, retour garanti. On s'occupe de la logistique, tu profites du paysage.
             </p>
           </div>
 
           {/* Staggered Floating Layout (Desktop absolute overlap & Mobile grid) */}
-          
+
           {/* 1. Desktop version */}
           <div className="relative max-w-6xl mx-auto min-h-[760px] hidden lg:block">
             {/* Central Main Rounded Image (Tent looking out to forest) - Enlarged */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[440px] h-[580px] rounded-[48px] overflow-hidden shadow-2xl border border-neutral-200 z-10">
-              <Image 
-                src="/tent_forest.png" 
-                alt="Vue de montagne depuis la tente" 
-                fill 
+              <Image
+                src="/tent_forest.png"
+                alt="Vue de montagne depuis la tente"
+                fill
                 className="object-cover"
                 sizes="440px"
               />
@@ -1277,10 +1827,10 @@ export default function Home() {
           <div className="lg:hidden flex flex-col md:grid md:grid-cols-2 gap-8 items-center max-w-2xl mx-auto">
             {/* Mobile Central Image */}
             <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] max-w-[380px] rounded-[36px] overflow-hidden shadow-xl border border-neutral-200 md:col-span-2 mx-auto mb-4">
-              <Image 
-                src="/tent_forest.png" 
-                alt="Vue de montagne depuis la tente" 
-                fill 
+              <Image
+                src="/tent_forest.png"
+                alt="Vue de montagne depuis la tente"
+                fill
                 className="object-cover"
                 sizes="(max-w-7xl) 380px"
               />
@@ -1329,10 +1879,10 @@ export default function Home() {
               <p className="text-xs text-neutral-100 mt-2 leading-relaxed">
                 Une assistance réactive en direct, des conseils d'allure et des tracés adaptés au niveau de chaque participant.
               </p>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
 
 
@@ -1341,10 +1891,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-widest text-primary-700 block text-center">
-              Preuve terrain
+              Témoignages
             </span>
             <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-center mt-3 mb-16 text-neutral-900">
-              Ils ont lâché le volant
+              Ils randonnent sans voiture grâce à Névé
             </h2>
 
             {/* Testimonial block */}
@@ -1357,7 +1907,7 @@ export default function Home() {
                 <p className="text-lg md:text-2xl font-normal leading-relaxed text-neutral-700 italic">
                   "Je prenais des captures d'écran de mes horaires à chaque fois pour ne pas me perdre. Avec Névé, j'ai juste profité de ma rando à Fontainebleau sans regarder ma montre une seule fois."
                 </p>
-                
+
                 <footer className="mt-8 pt-6 border-t border-neutral-150 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-11 h-11 rounded-full bg-primary-900 flex items-center justify-center font-bold text-white text-sm">
@@ -1368,7 +1918,7 @@ export default function Home() {
                       <div className="text-xs text-neutral-600">23 ans — Randonneur urbain (Paris 11e)</div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-4 text-xs font-bold text-neutral-500 uppercase tracking-wider">
                     <span className="inline-flex items-center gap-1.5 text-primary-700 bg-primary-50 px-3 py-1 rounded-full border border-primary-200">
                       🌲 Itinéraire fait : Fontainebleau
@@ -1424,8 +1974,8 @@ export default function Home() {
             {FAQ_ITEMS.map((item, idx) => {
               const isOpen = openFaqIdx === idx;
               return (
-                <div 
-                  key={idx} 
+                <div
+                  key={idx}
                   className="bg-white border border-neutral-200/80 rounded-[20px] overflow-hidden transition-all duration-350 hover:border-neutral-300 shadow-sm"
                 >
                   <button
@@ -1437,11 +1987,10 @@ export default function Home() {
                       {isOpen ? "—" : "+"}
                     </span>
                   </button>
-                  
+
                   {/* Smooth height transition for answer */}
-                  <div className={`transition-all duration-350 ease-in-out overflow-hidden ${
-                    isOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
-                  }`}>
+                  <div className={`transition-all duration-350 ease-in-out overflow-hidden ${isOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
+                    }`}>
                     <div className="px-6 pb-6 pt-1 text-xs md:text-sm text-neutral-700 font-normal leading-relaxed">
                       {item.a}
                     </div>
@@ -1460,18 +2009,18 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end mb-16">
             <div className="md:col-span-8">
               <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-neutral-900 leading-[1.1]">
-                Rejoignez-nous sur <br />
-                instagram
+                Suivez nos aventures <br />
+                sur Instagram
               </h2>
             </div>
             <div className="md:col-span-4 flex flex-col items-start gap-4">
               <p className="text-neutral-700 text-xs md:text-sm leading-relaxed max-w-sm">
-                Restez au plus près de nos aventures ! Suivez-nous sur les réseaux pour les dernières nouvelles de nos tracés, des récits de randos et des moments insolites de chaque week-end.
+                Chaque week-end, nos randonneurs partagent leurs découvertes. Rejoins la communauté pour ne rien manquer.
               </p>
-              <a 
-                href="https://instagram.com" 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-primary-900 hover:bg-primary-950 text-white px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-colors shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2"
               >
                 <span>Instagram</span>
@@ -1483,37 +2032,37 @@ export default function Home() {
           {/* Instagram Images 4-column feed */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
-              <Image 
-                src="/journey_mountain.png" 
-                alt="Randonneurs sur la crête" 
-                fill 
+              <Image
+                src="/journey_mountain.png"
+                alt="Randonneurs sur la crête"
+                fill
                 className="object-cover"
                 sizes="(max-w-7xl) 280px"
               />
             </div>
             <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
-              <Image 
-                src="/journey_river.png" 
-                alt="Val sauvage aux fleurs" 
-                fill 
+              <Image
+                src="/journey_river.png"
+                alt="Val sauvage aux fleurs"
+                fill
                 className="object-cover"
                 sizes="(max-w-7xl) 280px"
               />
             </div>
             <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
-              <Image 
-                src="/tent_forest.png" 
-                alt="Cozy camping sous la tente" 
-                fill 
+              <Image
+                src="/tent_forest.png"
+                alt="Cozy camping sous la tente"
+                fill
                 className="object-cover"
                 sizes="(max-w-7xl) 280px"
               />
             </div>
             <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
-              <Image 
-                src="/forest_lake.png" 
-                alt="Lac et forêt brumeuse" 
-                fill 
+              <Image
+                src="/forest_lake.png"
+                alt="Lac et forêt brumeuse"
+                fill
                 className="object-cover"
                 sizes="(max-w-7xl) 280px"
               />
@@ -1526,16 +2075,17 @@ export default function Home() {
       <section id="footer-cta" className="relative w-full bg-neutral-50 pt-20 pb-12 overflow-hidden flex flex-col justify-end min-h-[540px] md:min-h-[600px]">
         {/* Background image covering full bleed */}
         <div className="absolute inset-0 z-0">
-          <Image 
-            src="/neve_hero_bg_misty.jpg" 
-            alt="Route de montagne sinueuse et sapins dans la brume" 
-            fill 
+          <Image
+            src="/neve_hero_bg_misty.jpg"
+            alt="Route de montagne sinueuse et sapins dans la brume"
+            fill
+            quality={95}
             className="object-cover object-bottom"
             sizes="100vw"
             priority
           />
           {/* Double gradient overlay: fades sky/mist to neutral-50 at top, adds dark tint behind text, and fades landscape to dark zinc at bottom */}
-          <div 
+          <div
             className="absolute inset-0 z-1 pointer-events-none"
             style={{
               background: `linear-gradient(to bottom, 
@@ -1555,37 +2105,37 @@ export default function Home() {
 
         {/* Content overlay - shifted down to the bottom-middle for maximum readability */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full text-center flex flex-col items-center justify-end flex-1 pb-6 mt-12">
-          <h2 
+          <h2
             className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white mb-4 leading-[1.08] max-w-5xl"
             style={{ textShadow: '0 2px 14px rgba(0, 0, 0, 0.75), 0 1px 3px rgba(0, 0, 0, 0.9)' }}
           >
-            Commencez votre aventure <br />
-            <span>en pleine nature dès aujourd'hui</span>
+            Ta prochaine rando sans voiture <br />
+            <span>commence ici.</span>
           </h2>
-          
-          <p 
+
+          <p
             className="text-white/95 text-xs sm:text-sm md:text-base mb-8 max-w-xl mx-auto font-normal leading-relaxed"
             style={{ textShadow: '0 1px 8px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.9)' }}
           >
-            Téléchargez l'application Névé gratuitement pour planifier vos escapades en train, suivre nos tracés de randonnée exclusifs et voyager l'esprit léger.
+            Crée ton compte en 30 secondes et découvre les meilleurs sentiers accessibles en train depuis Paris.
           </p>
 
-          {/* Download Buttons (Clean white button + Store Info) */}
+          {/* Download Buttons -> Signup CTA */}
           <div className="flex flex-col items-center gap-4">
             <button
               onClick={() => {
-                alert("Lancement du téléchargement de Névé... L'application est en cours de déploiement et sera disponible très bientôt sur App Store et Google Play !");
+                window.location.href = "/signup";
               }}
               className="bg-white hover:bg-neutral-100 text-neutral-950 font-bold text-xs tracking-widest uppercase py-4 px-10 rounded-full transition-all duration-300 shadow-xl shadow-black/20 hover:scale-[1.02] active:scale-98 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2"
             >
-              Télécharger l'application
+              Créer mon compte
             </button>
-            
-            <span 
+
+            <span
               className="text-xs font-bold text-white/75 uppercase tracking-wider mt-2"
               style={{ textShadow: '0 1px 6px rgba(0, 0, 0, 0.8)' }}
             >
-              Disponible sur iOS & Android
+              Inscription 100% gratuite
             </span>
           </div>
 
@@ -1600,7 +2150,7 @@ export default function Home() {
               <CustomMountainLogo className="w-6 h-6 text-white" />
               <span className="text-sm font-bold uppercase tracking-wider text-white">NÉVÉ</span>
             </div>
-            
+
             <p className="text-xs order-last md:order-none">
               &copy; {new Date().getFullYear()} Névé Randonnées. Tous droits réservés.
             </p>
@@ -1669,6 +2219,194 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* --- BOOK ON TRAINLINE SIGNUP MODAL --- */}
+      {bookModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-950/80 backdrop-blur-sm p-4">
+          <div className="bg-white border border-neutral-200/50 text-neutral-900 w-full max-w-md p-8 md:p-10 rounded-[32px] relative shadow-2xl overflow-hidden animate-scale-up">
+            <button
+              onClick={() => setBookModalOpen(false)}
+              className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2 rounded-full p-1 cursor-pointer"
+              aria-label="Fermer"
+            >
+              <XIcon className="w-5 h-5" />
+            </button>
+
+            {!bookRegistered ? (
+              <>
+                <div className="mb-6 text-center sm:text-left">
+                  <span className="text-xs font-black uppercase tracking-widest text-primary-700">
+                    INSCRIPTION GRATUITE
+                  </span>
+                  <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight text-neutral-900 mt-1">
+                    Créer mon compte Névé
+                  </h3>
+                  <p className="text-xs text-neutral-600 mt-2 font-normal leading-relaxed">
+                    30 secondes pour accéder à tous les sentiers, réserver tes billets et randonner l'esprit léger.
+                  </p>
+                </div>
+
+                <form onSubmit={handleBookSubmit} className="space-y-4">
+                  {/* Full Name */}
+                  <div className="space-y-1.5 text-left">
+                    <label htmlFor="book-name" className="text-xs font-bold uppercase tracking-wider text-neutral-700 block">
+                      Nom Complet
+                    </label>
+                    <input
+                      type="text"
+                      id="book-name"
+                      name="name"
+                      placeholder="Ex: Rémi Dupont"
+                      value={bookForm.name}
+                      onChange={handleBookInputChange}
+                      className="w-full text-sm text-neutral-800 placeholder-neutral-400 font-medium px-4 py-3 bg-white border border-neutral-200/80 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-700 focus:border-transparent transition-all shadow-sm"
+                      aria-invalid={bookErrors.name ? "true" : "false"}
+                      aria-describedby={bookErrors.name ? "book-name-error" : undefined}
+                    />
+                    {bookErrors.name && (
+                      <p id="book-name-error" className="text-[11px] font-semibold text-red-600 mt-1 pl-1">
+                        {bookErrors.name}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Email address */}
+                  <div className="space-y-1.5 text-left">
+                    <label htmlFor="book-email" className="text-xs font-bold uppercase tracking-wider text-neutral-700 block">
+                      Adresse E-mail
+                    </label>
+                    <input
+                      type="email"
+                      id="book-email"
+                      name="email"
+                      placeholder="remi.dupont@gmail.com"
+                      value={bookForm.email}
+                      onChange={handleBookInputChange}
+                      className="w-full text-sm text-neutral-800 placeholder-neutral-400 font-medium px-4 py-3 bg-white border border-neutral-200/80 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-700 focus:border-transparent transition-all shadow-sm"
+                      aria-invalid={bookErrors.email ? "true" : "false"}
+                      aria-describedby={bookErrors.email ? "book-email-error" : undefined}
+                    />
+                    {bookErrors.email && (
+                      <p id="book-email-error" className="text-[11px] font-semibold text-red-600 mt-1 pl-1">
+                        {bookErrors.email}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Password */}
+                  <div className="space-y-1.5 text-left">
+                    <label htmlFor="book-password" className="text-xs font-bold uppercase tracking-wider text-neutral-700 block">
+                      Mot de passe
+                    </label>
+                    <input
+                      type="password"
+                      id="book-password"
+                      name="password"
+                      placeholder="Au moins 8 caractères"
+                      value={bookForm.password}
+                      onChange={handleBookInputChange}
+                      className="w-full text-sm text-neutral-800 placeholder-neutral-400 font-medium px-4 py-3 bg-white border border-neutral-200/80 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-700 focus:border-transparent transition-all shadow-sm"
+                      aria-invalid={bookErrors.password ? "true" : "false"}
+                      aria-describedby={bookErrors.password ? "book-password-error" : undefined}
+                    />
+                    {bookErrors.password && (
+                      <p id="book-password-error" className="text-[11px] font-semibold text-red-600 mt-1 pl-1">
+                        {bookErrors.password}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Terms Checkbox */}
+                  <div className="space-y-1.5 text-left">
+                    <div className="flex items-start gap-3 mt-2">
+                      <input
+                        type="checkbox"
+                        id="book-terms"
+                        name="terms"
+                        checked={bookForm.terms}
+                        onChange={handleBookInputChange}
+                        className="mt-1 h-4 w-4 rounded border-neutral-300 text-primary-700 focus:ring-primary-700 cursor-pointer"
+                        aria-invalid={bookErrors.terms ? "true" : "false"}
+                        aria-describedby={bookErrors.terms ? "book-terms-error" : undefined}
+                      />
+                      <label htmlFor="book-terms" className="text-xs text-neutral-600 leading-normal cursor-pointer select-none font-normal">
+                        J'accepte les conditions générales d'utilisation de Névé et la politique de confidentialité.
+                      </label>
+                    </div>
+                    {bookErrors.terms && (
+                      <p id="book-terms-error" className="text-[11px] font-semibold text-red-600 mt-1 pl-1">
+                        {bookErrors.terms}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 bg-primary-700 hover:bg-primary-800 text-white text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-300 shadow-md shadow-primary-950/20 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2 mt-4 hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    Créer mon compte gratuit
+                  </button>
+                </form>
+              </>
+            ) : (
+              /* Success View inside Booking Modal */
+              <div className="text-center space-y-6 animate-fade-in">
+                <div className="w-16 h-16 rounded-full bg-primary-50 border border-primary-200 flex items-center justify-center text-primary-700 mx-auto text-2xl shadow-sm">
+                  ✓
+                </div>
+
+                <div className="space-y-2">
+                  <span className="text-xs font-black uppercase tracking-widest text-primary-700">
+                    INSCRIPTION RÉUSSIE
+                  </span>
+                  <h3 className="text-xl font-black uppercase tracking-tight text-neutral-900 leading-tight">
+                    Bienvenue sur Névé !
+                  </h3>
+                  <p className="text-xs text-neutral-600 font-normal leading-relaxed">
+                    Votre compte a été créé. Pour finaliser votre voyage sur Trainline, accéder à vos billets et suivre votre itinéraire de rando en direct, téléchargez l'application mobile.
+                  </p>
+                </div>
+
+                {/* Download CTA buttons */}
+                <div className="space-y-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setBookDownloadMsg("L'application iOS sera disponible très bientôt sur l'App Store ! Nous vous enverrons un e-mail dès sa sortie.")}
+                    className="w-full py-3.5 bg-neutral-950 hover:bg-neutral-800 text-white text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-300 shadow-md flex items-center justify-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                  >
+                    <span>Télécharger sur l'App Store</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setBookDownloadMsg("L'application Android sera disponible très bientôt sur le Google Play Store ! Nous vous enverrons un e-mail dès sa sortie.")}
+                    className="w-full py-3.5 bg-white border border-neutral-200/80 hover:bg-neutral-50 text-neutral-800 text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-300 shadow-sm flex items-center justify-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                  >
+                    <span>Télécharger sur Google Play</span>
+                  </button>
+
+                  {bookDownloadMsg && (
+                    <p className="text-xs font-semibold text-primary-700 mt-3 p-3 bg-primary-50 border border-primary-200/50 rounded-2xl leading-relaxed animate-fade-in text-left">
+                      {bookDownloadMsg}
+                    </p>
+                  )}
+                </div>
+
+                <div className="pt-4 border-t border-neutral-200/50">
+                  <button
+                    type="button"
+                    onClick={() => setBookModalOpen(false)}
+                    className="w-full py-3 bg-primary-700 hover:bg-primary-800 text-white text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-300 shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2 cursor-pointer"
+                  >
+                    Retourner au trajet
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
